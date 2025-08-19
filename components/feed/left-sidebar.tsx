@@ -1,16 +1,16 @@
 "use client"
 
 import Link from "next/link"
-import { useAuth } from "@/contexts/auth-context"
+import { useLinkedIn } from "@/contexts/linkedin-context"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Eye, Bookmark, Users, Calendar } from "lucide-react"
 
 export function LeftSidebar() {
-  const { user } = useAuth()
+  const { currentUser } = useLinkedIn()
 
-  if (!user) return null
+  if (!currentUser) return null
 
   return (
     <div className="space-y-4">
@@ -20,17 +20,15 @@ export function LeftSidebar() {
         <CardContent className="pt-0 pb-4">
           <div className="flex flex-col items-center -mt-8">
             <Avatar className="h-16 w-16 border-4 border-white">
-              <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.firstName} />
+              <AvatarImage src={currentUser.profileImage || "/placeholder.svg"} alt={currentUser.name} />
               <AvatarFallback className="text-lg">
-                {user.firstName[0]}
-                {user.lastName[0]}
+                {currentUser.name.split(" ")[0][0]}
+                {currentUser.name.split(" ")[1]?.[0] || ""}
               </AvatarFallback>
             </Avatar>
             <Link href="/profile" className="mt-2 text-center hover:underline">
-              <h3 className="font-semibold text-gray-900">
-                {user.firstName} {user.lastName}
-              </h3>
-              <p className="text-sm text-gray-600 mt-1">{user.headline}</p>
+              <h3 className="font-semibold text-gray-900">{currentUser.name}</h3>
+              <p className="text-sm text-gray-600 mt-1">{currentUser.headline}</p>
             </Link>
           </div>
 

@@ -7,20 +7,20 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useAuth } from "@/contexts/auth-context"
+import { useLinkedIn } from "@/contexts/linkedin-context"
 import { Camera } from "lucide-react"
 import Link from "next/link"
 
 export default function EditProfilePage() {
-  const { user } = useAuth()
+  const { currentUser } = useLinkedIn()
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || "",
-    lastName: user?.lastName || "",
-    headline: user?.headline || "",
-    location: user?.location || "",
-    about: user?.about || "",
-    website: user?.website || "",
-    phone: user?.phone || "",
+    firstName: currentUser?.name.split(" ")[0] || "",
+    lastName: currentUser?.name.split(" ")[1] || "",
+    headline: currentUser?.headline || "",
+    location: currentUser?.location || "",
+    about: currentUser?.about || "",
+    website: currentUser?.website || "",
+    phone: currentUser?.phone || "",
   })
 
   const handleInputChange = (field: string, value: string) => {
@@ -57,10 +57,10 @@ export default function EditProfilePage() {
               <div className="flex items-center space-x-6">
                 <div className="relative">
                   <Avatar className="h-32 w-32">
-                    <AvatarImage src={user?.profileImage || "/placeholder.svg"} />
+                    <AvatarImage src={currentUser?.profileImage || "/placeholder.svg"} />
                     <AvatarFallback className="text-2xl">
-                      {user?.firstName?.[0]}
-                      {user?.lastName?.[0]}
+                      {currentUser?.name.split(" ")[0][0]}
+                      {currentUser?.name.split(" ")[1]?.[0] || ""}
                     </AvatarFallback>
                   </Avatar>
                   <Button size="sm" className="absolute bottom-0 right-0 rounded-full h-8 w-8 p-0" variant="secondary">

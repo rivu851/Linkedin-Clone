@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useAuth } from "@/contexts/auth-context"
+import { useLinkedIn } from "@/contexts/linkedin-context"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -10,10 +10,10 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Building2, GraduationCap, Edit3, Camera, Plus, MoreHorizontal, Users, Eye } from "lucide-react"
 
 export function ProfileHeader() {
-  const { user } = useAuth()
+  const { currentUser } = useLinkedIn()
   const [isFollowing, setIsFollowing] = useState(false)
 
-  if (!user) return null
+  if (!currentUser) return null
 
   return (
     <Card className="overflow-hidden">
@@ -32,10 +32,10 @@ export function ProfileHeader() {
           <div className="flex flex-col sm:flex-row sm:items-end">
             <div className="relative mb-4 sm:mb-0 sm:mr-6">
               <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
-                <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.firstName} />
+                <AvatarImage src={currentUser.profileImage || "/placeholder.svg"} alt={currentUser.name} />
                 <AvatarFallback className="text-2xl">
-                  {user.firstName[0]}
-                  {user.lastName[0]}
+                  {currentUser.name.split(" ")[0][0]}
+                  {currentUser.name.split(" ")[1]?.[0] || ""}
                 </AvatarFallback>
               </Avatar>
               <Button
@@ -49,18 +49,16 @@ export function ProfileHeader() {
 
             <div className="flex-1">
               <div className="flex items-center space-x-2 mb-2">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {user.firstName} {user.lastName}
-                </h1>
+                <h1 className="text-2xl font-bold text-gray-900">{currentUser.name}</h1>
                 <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
                   Premium
                 </Badge>
               </div>
-              <p className="text-lg text-gray-700 mb-2">{user.headline}</p>
+              <p className="text-lg text-gray-700 mb-2">{currentUser.headline}</p>
               <div className="flex items-center text-sm text-gray-600 space-x-4">
                 <div className="flex items-center">
                   <MapPin className="h-4 w-4 mr-1" />
-                  {user.location || "San Francisco, CA"}
+                  {currentUser.location || "San Francisco, CA"}
                 </div>
                 <div className="flex items-center">
                   <Building2 className="h-4 w-4 mr-1" />

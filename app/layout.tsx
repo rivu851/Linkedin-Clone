@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import "./globals.css"
-import { AuthProvider } from "@/contexts/auth-context"
+import { LinkedInProvider } from "@/contexts/linkedin-context"
 import { MessagingWidget } from "@/components/messaging/messaging-widget"
 
 export const metadata: Metadata = {
@@ -29,10 +29,10 @@ html {
         `}</style>
       </head>
       <body>
-        <AuthProvider>
+        <LinkedInProvider>
           {children}
           <MessagingWidget />
-        </AuthProvider>
+        </LinkedInProvider>
       </body>
     </html>
   )

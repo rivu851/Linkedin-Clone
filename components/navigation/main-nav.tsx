@@ -5,7 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
-import { useAuth } from "@/contexts/auth-context"
+import { useLinkedIn } from "@/contexts/linkedin-context"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -47,13 +47,12 @@ const navItems: NavItem[] = [
 ]
 
 export function MainNav() {
-  const { user, logout } = useAuth()
+  const { currentUser } = useLinkedIn()
   const router = useRouter()
   const pathname = usePathname()
   const [searchQuery, setSearchQuery] = useState("")
 
   const handleLogout = () => {
-    logout()
     router.push("/")
   }
 
@@ -63,8 +62,6 @@ export function MainNav() {
       router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
     }
   }
-
-  if (!user) return null
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -123,10 +120,10 @@ export function MainNav() {
                 <Button variant="ghost" className="flex flex-col items-center px-3 py-2 h-auto hover:bg-gray-100">
                   <div className="flex items-center space-x-1">
                     <Avatar className="h-5 w-5">
-                      <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.firstName} />
+                      <AvatarImage src={currentUser.profileImage || "/placeholder.svg"} alt={currentUser.name} />
                       <AvatarFallback className="text-xs">
-                        {user.firstName[0]}
-                        {user.lastName[0]}
+                        {currentUser.name.split(" ")[0][0]}
+                        {currentUser.name.split(" ")[1]?.[0] || ""}
                       </AvatarFallback>
                     </Avatar>
                     <ChevronDown className="h-3 w-3" />
@@ -138,17 +135,15 @@ export function MainNav() {
                 <div className="p-4">
                   <div className="flex items-center space-x-3">
                     <Avatar className="h-16 w-16">
-                      <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.firstName} />
+                      <AvatarImage src={currentUser.profileImage || "/placeholder.svg"} alt={currentUser.name} />
                       <AvatarFallback>
-                        {user.firstName[0]}
-                        {user.lastName[0]}
+                        {currentUser.name.split(" ")[0][0]}
+                        {currentUser.name.split(" ")[1]?.[0] || ""}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">
-                        {user.firstName} {user.lastName}
-                      </h3>
-                      <p className="text-sm text-gray-600">{user.headline}</p>
+                      <h3 className="font-semibold text-gray-900">{currentUser.name}</h3>
+                      <p className="text-sm text-gray-600">{currentUser.headline}</p>
                     </div>
                   </div>
                   <Button

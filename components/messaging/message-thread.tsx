@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
-import { useAuth } from "@/contexts/auth-context"
+import { useLinkedIn } from "@/contexts/linkedin-context"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -112,7 +112,7 @@ const participants: Record<string, any> = {
 }
 
 export function MessageThread({ conversationId }: MessageThreadProps) {
-  const { user } = useAuth()
+  const { currentUser } = useLinkedIn()
   const [messages, setMessages] = useState<Message[]>(mockMessages[conversationId] || [])
   const [newMessage, setNewMessage] = useState("")
   const [isTyping, setIsTyping] = useState(false)

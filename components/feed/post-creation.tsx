@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useAuth } from "@/contexts/auth-context"
+import { useLinkedIn } from "@/contexts/linkedin-context"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -15,13 +15,13 @@ interface PostCreationProps {
 }
 
 export function PostCreation({ onPostCreated }: PostCreationProps) {
-  const { user } = useAuth()
+  const { currentUser } = useLinkedIn()
   const [isOpen, setIsOpen] = useState(false)
   const [postContent, setPostContent] = useState("")
   const [privacy, setPrivacy] = useState("anyone")
   const [isPosting, setIsPosting] = useState(false)
 
-  if (!user) return null
+  if (!currentUser) return null
 
   const handlePost = async () => {
     if (!postContent.trim()) return
@@ -34,9 +34,9 @@ export function PostCreation({ onPostCreated }: PostCreationProps) {
     const newPost = {
       id: Date.now().toString(),
       author: {
-        name: `${user.firstName} ${user.lastName}`,
-        headline: user.headline || "Professional",
-        profileImage: user.profileImage,
+        name: currentUser.name,
+        headline: currentUser.headline || "Professional",
+        profileImage: currentUser.profileImage,
         timeAgo: "now",
       },
       content: postContent,
@@ -63,10 +63,10 @@ export function PostCreation({ onPostCreated }: PostCreationProps) {
       <CardContent className="p-4">
         <div className="flex items-center space-x-3">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.firstName} />
+            <AvatarImage src={currentUser.profileImage || "/placeholder.svg"} alt={currentUser.name} />
             <AvatarFallback>
-              {user.firstName[0]}
-              {user.lastName[0]}
+              {currentUser.name.split(" ")[0][0]}
+              {currentUser.name.split(" ")[1]?.[0] || ""}
             </AvatarFallback>
           </Avatar>
 
@@ -94,16 +94,14 @@ export function PostCreation({ onPostCreated }: PostCreationProps) {
                 {/* User Info */}
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-12 w-12">
-                    <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.firstName} />
+                    <AvatarImage src={currentUser.profileImage || "/placeholder.svg"} alt={currentUser.name} />
                     <AvatarFallback>
-                      {user.firstName[0]}
-                      {user.lastName[0]}
+                      {currentUser.name.split(" ")[0][0]}
+                      {currentUser.name.split(" ")[1]?.[0] || ""}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">
-                      {user.firstName} {user.lastName}
-                    </h3>
+                    <h3 className="font-semibold text-gray-900">{currentUser.name}</h3>
                     <Select value={privacy} onValueChange={setPrivacy}>
                       <SelectTrigger className="w-auto h-auto p-0 border-0 bg-transparent">
                         <SelectValue />

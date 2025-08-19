@@ -9,7 +9,7 @@ interface User {
   email: string
   headline: string
   location: string
-  avatar: string
+  profileImage: string // renamed from avatar to profileImage
   banner: string
   connections: number
   profileViews: number
@@ -20,11 +20,11 @@ interface Post {
   author: {
     name: string
     headline: string
-    avatar: string
+    profileImage: string // renamed from avatar to profileImage
+    timeAgo: string // added timeAgo property
   }
   content: string
   image?: string
-  timestamp: string
   likes: number
   comments: number
   shares: number
@@ -78,8 +78,8 @@ interface LinkedInContextType {
   jobs: Job[]
   conversations: Conversation[]
   notifications: any[]
-  addPost: (content: string, image?: string) => void
-  likePost: (postId: string) => void
+  addPost: (postData: { content: string; author: Post["author"] }) => void // updated addPost signature
+  toggleLike: (postId: string) => void // renamed from likePost to toggleLike
   sendMessage: (conversationId: string, content: string) => void
   connectWithUser: (userId: string) => void
 }
@@ -101,7 +101,7 @@ export const LinkedInProvider: React.FC<{ children: ReactNode }> = ({ children }
     email: "john.doe@example.com",
     headline: "Senior Software Engineer at Tech Corp",
     location: "San Francisco, CA",
-    avatar: "/professional-headshot.png",
+    profileImage: "/professional-headshot.png", // renamed from avatar
     banner: "/professional-banner.png",
     connections: 500,
     profileViews: 25,
@@ -113,12 +113,12 @@ export const LinkedInProvider: React.FC<{ children: ReactNode }> = ({ children }
       author: {
         name: "Sarah Johnson",
         headline: "Product Manager at Innovation Labs",
-        avatar: "/professional-woman-headshot.png",
+        profileImage: "/professional-woman-headshot.png", // renamed from avatar
+        timeAgo: "2h", // added timeAgo
       },
       content:
         "Excited to share that our team just launched a new AI-powered feature that will revolutionize how users interact with our platform! 🚀",
       image: "/ai-conference.png",
-      timestamp: "2h",
       likes: 42,
       comments: 8,
       shares: 3,
@@ -172,17 +172,12 @@ export const LinkedInProvider: React.FC<{ children: ReactNode }> = ({ children }
     },
   ])
 
-  const addPost = (content: string, image?: string) => {
+  const addPost = (postData: { content: string; author: Post["author"] }) => {
+    // updated function signature
     const newPost: Post = {
       id: Date.now().toString(),
-      author: {
-        name: currentUser.name,
-        headline: currentUser.headline,
-        avatar: currentUser.avatar,
-      },
-      content,
-      image,
-      timestamp: "now",
+      author: postData.author,
+      content: postData.content,
       likes: 0,
       comments: 0,
       shares: 0,
@@ -191,7 +186,8 @@ export const LinkedInProvider: React.FC<{ children: ReactNode }> = ({ children }
     setPosts((prev) => [newPost, ...prev])
   }
 
-  const likePost = (postId: string) => {
+  const toggleLike = (postId: string) => {
+    // renamed from likePost
     setPosts((prev) =>
       prev.map((post) =>
         post.id === postId
@@ -219,7 +215,7 @@ export const LinkedInProvider: React.FC<{ children: ReactNode }> = ({ children }
     conversations,
     notifications: [],
     addPost,
-    likePost,
+    toggleLike, // renamed from likePost
     sendMessage,
     connectWithUser,
   }

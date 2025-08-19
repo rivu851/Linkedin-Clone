@@ -83,7 +83,7 @@ export const MainNav: React.FC = () => {
                 <Button variant="ghost" className="flex flex-col items-center space-y-1 px-3 py-2 h-auto">
                   <div className="flex items-center space-x-1">
                     <Avatar className="h-6 w-6">
-                      <AvatarImage src={currentUser.avatar || "/placeholder.svg"} alt={currentUser.name} />
+                      <AvatarImage src={currentUser.profileImage || "/placeholder.svg"} alt={currentUser.name} />
                       <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <ChevronDown className="h-3 w-3" />
@@ -95,7 +95,7 @@ export const MainNav: React.FC = () => {
                 <div className="p-4 border-b">
                   <div className="flex items-center space-x-3">
                     <Avatar className="h-12 w-12">
-                      <AvatarImage src={currentUser.avatar || "/placeholder.svg"} alt={currentUser.name} />
+                      <AvatarImage src={currentUser.profileImage || "/placeholder.svg"} alt={currentUser.name} />
                       <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
